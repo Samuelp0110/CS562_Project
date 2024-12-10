@@ -18,7 +18,7 @@ def parse_file(file_path):
     return selectAttributes, groupingVars, groupingAttributes, aggregates, predicates, havingCondition
 
 if userInput == "":
-    #this works
+    #this works, but need example for having condition
     selectAttributes  = input("Please input the select attributes seperated by a comma. For example: product, sum_x_quant: ").replace(" ", "")
     groupingVars = input("Please input the number of grouping variables. For example: 2: ").replace(" ", "")
     groupingAttributes = input("Please input the grouping attribute seperated with commas. Fpr example: product, place: ").replace(" ", "")
