@@ -1,0 +1,60 @@
+esql:
+SELECT prod, sum(X.quantity), sum(Y.quantity), sum(Z.quantity)
+FROM Sales
+GROUP BY product : X, Y, Z
+SUCH THAT X.month = 1 AND Y.month = 2 AND Z.month = 3
+HAVING year = 2020
+
+
+sqlwithouthaving:
+WITH X AS (
+    SELECT prod, SUM(quant) AS sum_x_quant
+    FROM Sales
+    WHERE month = 1
+    GROUP BY prod
+),
+Y AS (
+    SELECT prod, SUM(quant) AS sum_y_quant
+    FROM Sales
+    WHERE month = 2
+    GROUP BY prod
+),
+Z AS (
+    SELECT prod, SUM(quant) AS sum_z_quant
+    FROM Sales
+    WHERE month = 3
+    GROUP BY prod
+)
+SELECT s.prod, X.sum_x_quant, Y.sum_y_quant, Z.sum_z_quant
+FROM Sales s
+LEFT JOIN X ON s.prod = X.prod
+LEFT JOIN Y ON s.prod = Y.prod
+LEFT JOIN Z ON s.prod = Z.prod
+GROUP BY s.prod, X.sum_x_quant, Y.sum_y_quant, Z.sum_z_quant;
+
+sqlwithhaving:
+WITH X AS (
+    SELECT prod, SUM(quant) AS sum_x_quant
+    FROM Sales
+    WHERE year = 2020 AND month = 1
+    GROUP BY prod
+),
+Y AS (
+    SELECT prod, SUM(quant) AS sum_y_quant
+    FROM Sales
+    WHERE year = 2020 AND month = 2
+    GROUP BY prod
+),
+Z AS (
+    SELECT prod, SUM(quant) AS sum_z_quant
+    FROM Sales
+    WHERE year = 2020 AND month = 3
+    GROUP BY prod
+)
+SELECT s.prod, X.sum_x_quant, Y.sum_y_quant, Z.sum_z_quant
+FROM Sales s
+LEFT JOIN X ON s.prod = X.prod
+LEFT JOIN Y ON s.prod = Y.prod
+LEFT JOIN Z ON s.prod = Z.prod
+WHERE s.year = 2020
+GROUP BY s.prod, X.sum_x_quant, Y.sum_y_quant, Z.sum_z_quant;

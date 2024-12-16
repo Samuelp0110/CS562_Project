@@ -1,0 +1,33 @@
+esql:
+SELECT cust, sum(x.quant), sum(y.quant), sum(z.quant)
+FROM sales
+GROUP BY cust: x, y, z
+SUCH THAT x.state = ‘NY’ AND y.state = ‘NJ’ AND z.state = ‘CT’
+HAVING sum(x.quant) > 2 * sum(y.quant) or avg(x.quant) > avg(z.quant)
+
+sql:
+WITH x AS (
+    SELECT cust, SUM(quant) AS sum_x_quant, AVG(quant) AS avg_x_quant
+    FROM sales
+    WHERE state = 'NY'
+    GROUP BY cust
+),
+y AS (
+    SELECT cust, SUM(quant) AS sum_y_quant
+    FROM sales
+    WHERE state = 'NJ'
+    GROUP BY cust
+),
+z AS (
+    SELECT cust, SUM(quant) AS sum_z_quant, AVG(quant) AS avg_z_quant
+    FROM sales
+    WHERE state = 'CT'
+    GROUP BY cust
+)
+SELECT s.cust, x.sum_x_quant, y.sum_y_quant, z.sum_z_quant
+FROM sales s
+LEFT JOIN x ON s.cust = x.cust
+LEFT JOIN y ON s.cust = y.cust
+LEFT JOIN z ON s.cust = z.cust
+GROUP BY s.cust, x.sum_x_quant, y.sum_y_quant, z.sum_z_quant, x.avg_x_quant, z.avg_z_quant
+HAVING x.sum_x_quant > 2 * y.sum_y_quant OR x.avg_x_quant > z.avg_z_quant;

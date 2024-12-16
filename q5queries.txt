@@ -1,0 +1,31 @@
+esql:
+SELECT prod, sum(1.quant), sum(2.quant), avg(3.quant)
+FROM sales
+GROUP BY prod: 1, 2, 3
+SUCH THAT 1.month = 1 AND 2.month = 5 AND 3.month = 9
+
+sql:
+WITH X AS (
+    SELECT prod, SUM(quant) AS sum_x_quant
+    FROM Sales
+    WHERE month = 1
+    GROUP BY prod
+),
+Y AS (
+    SELECT prod, SUM(quant) AS sum_y_quant
+    FROM Sales
+    WHERE month = 5
+    GROUP BY prod
+),
+Z AS (
+    SELECT prod, AVG(quant) AS avg_z_quant
+    FROM Sales
+    WHERE month = 9
+    GROUP BY prod
+)
+SELECT s.prod, X.sum_x_quant, Y.sum_y_quant, Z.avg_z_quant
+FROM Sales s
+LEFT JOIN X ON s.prod = X.prod
+LEFT JOIN Y ON s.prod = Y.prod
+LEFT JOIN Z ON s.prod = Z.prod
+GROUP BY s.prod, X.sum_x_quant, Y.sum_y_quant, Z.avg_z_quant;

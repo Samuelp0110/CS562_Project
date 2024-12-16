@@ -1,0 +1,11 @@
+esql:
+SELECT prod, sum(1.quant), avg(1.quant), max(1.quant)
+FROM sales
+GROUP BY prod; 1
+SUCH THAT 1.year = 2017
+
+sql:
+SELECT prod, sum(quant), avg(quant), max(quant)
+FROM sales
+WHERE year = 2017
+GROUP BY prod

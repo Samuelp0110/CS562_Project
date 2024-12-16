@@ -16,11 +16,11 @@ cur.execute("SELECT * FROM sales")
 sales_data = cur.fetchall()
 cur.close()
 
-selectAttributes = "cust, 1_sum_quant, 1_avg_quant, 1_max_quant, 1_min_quant, 1_count_quant"
+selectAttributes = "prod, 1_sum_quant, 1_avg_quant, 1_max_quant"
 groupingVars = "1"
-groupingAttributes = "cust"
-aggregates = "1_sum_quant, 1_avg_quant, 1_max_quant, 1_min_quant, 1_count_quant"
-groupingPredicates = "1.state = 'NY',1.year = 2017"
+groupingAttributes = "prod"
+aggregates = "1_sum_quant, 1_avg_quant, 1_max_quant"
+groupingPredicates = "1.year = 2017"
 havingCondition = ""
 mf_struct = {}
 output = PrettyTable()
